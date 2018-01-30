@@ -13,3 +13,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 from SEDkit import seds
 from astrodbkit import astrodb, astrocat
+from astropy.io import fits
+import glob
+
+class SourceCatalog(object):
+    
+    def __init__(self):
+        """
+        Initialize the SourceCatalog object
+        """
+        # The path to the grizli output directory
+        self.path = ''
+        
+    def ingest_grizli(self, path):
+        """
+        Ingest the grizli files in the given directory and parse
+        
+        Parameters
+        ----------
+        path: str
+            The path to the grizli output
+        """
+        # Store the ingest path
+        self.path = path
+        
+        # Open all the FITS files, parse the headers, and generate a catalog
+        for f in glob.glob(path+'/*.fits'):
+            data, header = fits.getdata(f, header=True)
