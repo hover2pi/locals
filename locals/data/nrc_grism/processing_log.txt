@@ -1,0 +1,131 @@
+$ strun calwebb_spec2.cfg jw111110-a3001_20171109T145456_spec2_001_asn.json
+2017-12-07 08:39:35,627 - stpipe.Spec2Pipeline - INFO - Spec2Pipeline instance created.
+2017-12-07 08:39:35,628 - stpipe.Spec2Pipeline.srctype - INFO - SourceTypeStep instance created.
+2017-12-07 08:39:35,628 - stpipe.Spec2Pipeline.flat_field - INFO - FlatFieldStep instance created.
+2017-12-07 08:39:35,629 - stpipe.Spec2Pipeline.photom - INFO - PhotomStep instance created.
+2017-12-07 08:39:35,630 - stpipe.Spec2Pipeline.barshadow - INFO - BarShadowStep instance created.
+2017-12-07 08:39:35,631 - stpipe.Spec2Pipeline.resample_spec - INFO - ResampleSpecStep instance created.
+2017-12-07 08:39:35,631 - stpipe.Spec2Pipeline.imprint_subtract - INFO - ImprintStep instance created.
+2017-12-07 08:39:35,632 - stpipe.Spec2Pipeline.bkg_subtract - INFO - BackgroundStep instance created.
+2017-12-07 08:39:35,633 - stpipe.Spec2Pipeline.cube_build - INFO - CubeBuildStep instance created.
+2017-12-07 08:39:35,634 - stpipe.Spec2Pipeline.fringe - INFO - FringeStep instance created.
+2017-12-07 08:39:35,634 - stpipe.Spec2Pipeline.straylight - INFO - StraylightStep instance created.
+2017-12-07 08:39:35,635 - stpipe.Spec2Pipeline.assign_wcs - INFO - AssignWcsStep instance created.
+2017-12-07 08:39:35,636 - stpipe.Spec2Pipeline.extract_2d - INFO - Extract2dStep instance created.
+2017-12-07 08:39:35,636 - stpipe.Spec2Pipeline.pathloss - INFO - PathLossStep instance created.
+2017-12-07 08:39:35,637 - stpipe.Spec2Pipeline.extract_1d - INFO - Extract1dStep instance created.
+2017-12-07 08:39:35,638 - stpipe.Spec2Pipeline.msa_flagging - INFO - MSAFlagOpenStep instance created.
+2017-12-07 08:39:35,638 - stpipe - INFO - Hostname: source4.home.stsci.edu
+2017-12-07 08:39:35,638 - stpipe - INFO - OS: Darwin
+2017-12-07 08:39:41,834 - stpipe.Spec2Pipeline - INFO - Prefetch for AREA reference file is 'N/A'.
+2017-12-07 08:39:41,834 - stpipe.Spec2Pipeline - INFO - Prefetch for BARSHADOW reference file is 'N/A'.
+2017-12-07 08:39:41,834 - stpipe.Spec2Pipeline - INFO - Prefetch for CAMERA reference file is 'N/A'.
+2017-12-07 08:39:41,834 - stpipe.Spec2Pipeline - INFO - Prefetch for COLLIMATOR reference file is 'N/A'.
+2017-12-07 08:39:41,834 - stpipe.Spec2Pipeline - INFO - Prefetch for CUBEPAR reference file is 'N/A'.
+2017-12-07 08:39:41,835 - stpipe.Spec2Pipeline - INFO - Prefetch for DFLAT reference file is 'N/A'.
+2017-12-07 08:39:41,835 - stpipe.Spec2Pipeline - INFO - Prefetch for DISPERSER reference file is 'N/A'.
+2017-12-07 08:39:41,835 - stpipe.Spec2Pipeline - INFO - Prefetch for DISTORTION reference file is '/grp/crds/cache/references/jwst/jwst_nircam_distortion_0059.asdf'.
+2017-12-07 08:39:41,856 - stpipe.Spec2Pipeline - INFO - Prefetch for DRIZPARS reference file is '/grp/crds/cache/references/jwst/jwst_nircam_drizpars_0001.fits'.
+2017-12-07 08:39:41,876 - stpipe.Spec2Pipeline - INFO - Prefetch for EXTRACT1D reference file is 'N/A'.
+2017-12-07 08:39:41,876 - stpipe.Spec2Pipeline - INFO - Prefetch for FFLAT reference file is 'N/A'.
+2017-12-07 08:39:41,876 - stpipe.Spec2Pipeline - INFO - Prefetch for FILTEROFFSET reference file is 'N/A'.
+2017-12-07 08:39:41,876 - stpipe.Spec2Pipeline - INFO - Prefetch for FLAT reference file is '/grp/crds/cache/references/jwst/jwst_nircam_flat_0142.fits'.
+2017-12-07 08:39:41,896 - stpipe.Spec2Pipeline - INFO - Prefetch for FORE reference file is 'N/A'.
+2017-12-07 08:39:41,896 - stpipe.Spec2Pipeline - INFO - Prefetch for FPA reference file is 'N/A'.
+2017-12-07 08:39:41,897 - stpipe.Spec2Pipeline - INFO - Prefetch for FRINGE reference file is 'N/A'.
+2017-12-07 08:39:41,897 - stpipe.Spec2Pipeline - INFO - Prefetch for IFUFORE reference file is 'N/A'.
+2017-12-07 08:39:41,897 - stpipe.Spec2Pipeline - INFO - Prefetch for IFUPOST reference file is 'N/A'.
+2017-12-07 08:39:41,897 - stpipe.Spec2Pipeline - INFO - Prefetch for IFUSLICER reference file is 'N/A'.
+2017-12-07 08:39:41,897 - stpipe.Spec2Pipeline - INFO - Prefetch for MSA reference file is 'N/A'.
+2017-12-07 08:39:41,897 - stpipe.Spec2Pipeline - INFO - Prefetch for MSAOPER reference file is 'N/A'.
+2017-12-07 08:39:41,897 - stpipe.Spec2Pipeline - INFO - Prefetch for OTE reference file is 'N/A'.
+2017-12-07 08:39:41,897 - stpipe.Spec2Pipeline - INFO - Prefetch for PATHLOSS reference file is 'N/A'.
+2017-12-07 08:39:41,897 - stpipe.Spec2Pipeline - INFO - Prefetch for PHOTOM reference file is '/grp/crds/cache/references/jwst/jwst_nircam_photom_0050.fits'.
+2017-12-07 08:39:41,919 - stpipe.Spec2Pipeline - INFO - Prefetch for REGIONS reference file is 'N/A'.
+2017-12-07 08:39:41,919 - stpipe.Spec2Pipeline - INFO - Prefetch for RESOL reference file is 'N/A'.
+2017-12-07 08:39:41,919 - stpipe.Spec2Pipeline - INFO - Prefetch for SFLAT reference file is 'N/A'.
+2017-12-07 08:39:41,919 - stpipe.Spec2Pipeline - INFO - Prefetch for SPECWCS reference file is '/grp/crds/cache/references/jwst/jwst_nircam_specwcs_0010.asdf'.
+2017-12-07 08:39:41,939 - stpipe.Spec2Pipeline - INFO - Prefetch for STRAYMASK reference file is 'N/A'.
+2017-12-07 08:39:41,939 - stpipe.Spec2Pipeline - INFO - Prefetch for V2V3 reference file is 'N/A'.
+2017-12-07 08:39:41,939 - stpipe.Spec2Pipeline - INFO - Prefetch for WAVECORR reference file is 'N/A'.
+2017-12-07 08:39:41,939 - stpipe.Spec2Pipeline - INFO - Prefetch for WAVELENGTHRANGE reference file is '/grp/crds/cache/references/jwst/jwst_nircam_wavelengthrange_0001.asdf'.
+2017-12-07 08:39:42,251 - stpipe.Spec2Pipeline - INFO - First argument jw111110-a3001_20171109T145456_spec2_001_asn.json does not appear to be a model
+2017-12-07 08:39:42,284 - stpipe.Spec2Pipeline - INFO - Step Spec2Pipeline running with args ('jw111110-a3001_20171109T145456_spec2_001_asn.json',).
+2017-12-07 08:39:42,284 - stpipe.Spec2Pipeline - INFO - Starting calwebb_spec2 ...
+2017-12-07 08:39:42,303 - stpipe.Spec2Pipeline - INFO - Processing product jw11111001001_01104_00001
+2017-12-07 08:39:42,303 - stpipe.Spec2Pipeline - INFO - Working on input jw11111001001_01104_00001_nrcalong_rate.fits ...
+2017-12-07 08:39:42,669 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for CAMERA reference file is 'N/A'.
+2017-12-07 08:39:42,669 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for COLLIMATOR reference file is 'N/A'.
+2017-12-07 08:39:42,669 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for DISPERSER reference file is 'N/A'.
+2017-12-07 08:39:42,669 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for DISTORTION reference file is '/grp/crds/cache/references/jwst/jwst_nircam_distortion_0059.asdf'.
+2017-12-07 08:39:42,679 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for FILTEROFFSET reference file is 'N/A'.
+2017-12-07 08:39:42,680 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for FORE reference file is 'N/A'.
+2017-12-07 08:39:42,680 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for FPA reference file is 'N/A'.
+2017-12-07 08:39:42,680 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for IFUFORE reference file is 'N/A'.
+2017-12-07 08:39:42,680 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for IFUPOST reference file is 'N/A'.
+2017-12-07 08:39:42,680 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for IFUSLICER reference file is 'N/A'.
+2017-12-07 08:39:42,680 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for MSA reference file is 'N/A'.
+2017-12-07 08:39:42,680 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for OTE reference file is 'N/A'.
+2017-12-07 08:39:42,680 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for REGIONS reference file is 'N/A'.
+2017-12-07 08:39:42,680 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for SPECWCS reference file is '/grp/crds/cache/references/jwst/jwst_nircam_specwcs_0010.asdf'.
+2017-12-07 08:39:42,691 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for V2V3 reference file is 'N/A'.
+2017-12-07 08:39:42,691 - stpipe.Spec2Pipeline.assign_wcs - INFO - Prefetch for WAVELENGTHRANGE reference file is '/grp/crds/cache/references/jwst/jwst_nircam_wavelengthrange_0001.asdf'.
+2017-12-07 08:39:42,744 - stpipe.Spec2Pipeline.assign_wcs - INFO - Step assign_wcs running with args (<jwst.datamodels.image.ImageModel object at 0x1170becc0>,).
+2017-12-07 08:39:51,687 - stpipe.Spec2Pipeline.assign_wcs - INFO - assign_wcs did not update S_REGION for type NRC_GRISM
+2017-12-07 08:39:51,687 - stpipe.Spec2Pipeline.assign_wcs - INFO - COMPLETED assign_wcs
+2017-12-07 08:39:51,757 - stpipe.Spec2Pipeline.assign_wcs - INFO - Step assign_wcs done
+2017-12-07 08:39:51,804 - stpipe.Spec2Pipeline.bkg_subtract - INFO - Step bkg_subtract running with args (<jwst.datamodels.image.ImageModel object at 0x110fe0550>, []).
+2017-12-07 08:39:51,883 - stpipe.Spec2Pipeline.bkg_subtract - INFO - No 'wfssbkg' reference file available; skipping background subtraction.
+2017-12-07 08:39:52,149 - stpipe.Spec2Pipeline.bkg_subtract - INFO - Step bkg_subtract done
+2017-12-07 08:39:52,315 - stpipe.Spec2Pipeline.flat_field - INFO - Prefetch for DFLAT reference file is 'N/A'.
+2017-12-07 08:39:52,315 - stpipe.Spec2Pipeline.flat_field - INFO - Prefetch for FFLAT reference file is 'N/A'.
+2017-12-07 08:39:52,315 - stpipe.Spec2Pipeline.flat_field - INFO - Prefetch for FLAT reference file is '/grp/crds/cache/references/jwst/jwst_nircam_flat_0142.fits'.
+2017-12-07 08:39:52,327 - stpipe.Spec2Pipeline.flat_field - INFO - Prefetch for SFLAT reference file is 'N/A'.
+2017-12-07 08:39:52,370 - stpipe.Spec2Pipeline.flat_field - INFO - Step flat_field running with args (<jwst.datamodels.image.ImageModel object at 0x110dd2898>,).
+2017-12-07 08:39:56,915 - stpipe.Spec2Pipeline.flat_field - INFO - Step flat_field done
+2017-12-07 08:39:57,097 - stpipe.Spec2Pipeline.extract_2d - INFO - Prefetch for WAVECORR reference file is 'N/A'.
+2017-12-07 08:39:57,097 - stpipe.Spec2Pipeline.extract_2d - INFO - Prefetch for WAVELENGTHRANGE reference file is '/grp/crds/cache/references/jwst/jwst_nircam_wavelengthrange_0001.asdf'.
+2017-12-07 08:39:57,153 - stpipe.Spec2Pipeline.extract_2d - INFO - Step extract_2d running with args (<jwst.datamodels.image.ImageModel object at 0x110cec2b0>,).
+2017-12-07 08:39:57,315 - stpipe.Spec2Pipeline.extract_2d - INFO - EXP_TYPE is NRC_GRISM
+2017-12-07 08:39:57,634 - stpipe.Spec2Pipeline.extract_2d - INFO - Partial order on detector for obj: 10 order: 1
+2017-12-07 08:39:57,639 - stpipe.Spec2Pipeline.extract_2d - INFO - Partial order on detector for obj: 10 order: 2
+2017-12-07 08:39:57,639 - stpipe.Spec2Pipeline.extract_2d - INFO - Grism object list created from source catalog: jw11111001001_01104_00001_nrcalong_cat.ecsv
+2017-12-07 08:39:57,639 - stpipe.Spec2Pipeline.extract_2d - INFO - Creating output model
+2017-12-07 08:39:57,904 - stpipe.Spec2Pipeline.extract_2d - INFO - Subarray extracted for obj: 10 order: 1:
+2017-12-07 08:39:57,904 - stpipe.Spec2Pipeline.extract_2d - INFO - Subarray extents are: (xmin:0, ymin:441), (xmax:584, ymax:521)
+2017-12-07 08:40:41,119 - stpipe.Spec2Pipeline.extract_2d - INFO - Subarray extracted for obj: 10 order: 2:
+2017-12-07 08:40:41,119 - stpipe.Spec2Pipeline.extract_2d - INFO - Subarray extents are: (xmin:1613, ymin:441), (xmax:2048, ymax:521)
+2017-12-07 08:42:39,931 - stpipe.Spec2Pipeline.extract_2d - INFO - Step extract_2d done
+2017-12-07 08:42:40,013 - stpipe.Spec2Pipeline.srctype - INFO - Step srctype running with args (<jwst.datamodels.multislit.MultiSlitModel object at 0x10f04b6a0>,).
+2017-12-07 08:42:40,030 - stpipe.Spec2Pipeline.srctype - INFO - Input EXP_TYPE is NRC_GRISM
+2017-12-07 08:42:40,030 - stpipe.Spec2Pipeline.srctype - WARNING - EXP_TYPE NRC_GRISM not applicable to this operation
+2017-12-07 08:42:40,030 - stpipe.Spec2Pipeline.srctype - WARNING - Step will be skipped
+2017-12-07 08:42:40,038 - stpipe.Spec2Pipeline.srctype - INFO - Step srctype done
+2017-12-07 08:42:40,177 - stpipe.Spec2Pipeline.photom - INFO - Prefetch for AREA reference file is 'N/A'.
+2017-12-07 08:42:40,178 - stpipe.Spec2Pipeline.photom - INFO - Prefetch for PHOTOM reference file is '/grp/crds/cache/references/jwst/jwst_nircam_photom_0050.fits'.
+2017-12-07 08:42:40,343 - stpipe.Spec2Pipeline.photom - INFO - Step photom running with args (<jwst.datamodels.multislit.MultiSlitModel object at 0x115519eb8>,).
+2017-12-07 08:42:40,428 - stpipe.Spec2Pipeline.photom - INFO - Using photom reference file: /grp/crds/cache/references/jwst/jwst_nircam_photom_0050.fits
+2017-12-07 08:42:40,490 - stpipe.Spec2Pipeline.photom - INFO - Using area reference file: N/A
+2017-12-07 08:42:40,490 - stpipe.Spec2Pipeline.photom - INFO - Using instrument: NIRCAM
+2017-12-07 08:42:40,490 - stpipe.Spec2Pipeline.photom - INFO -  detector: NRCALONG
+2017-12-07 08:42:40,490 - stpipe.Spec2Pipeline.photom - INFO -  exp_type: NRC_GRISM
+2017-12-07 08:42:40,491 - stpipe.Spec2Pipeline.photom - INFO -  filter: F360M
+2017-12-07 08:42:40,491 - stpipe.Spec2Pipeline.photom - INFO -  pupil: GRISMR
+2017-12-07 08:42:40,684 - stpipe.Spec2Pipeline.photom - WARNING - Did not find a match in the ref file, so returning conversion factor 0.0
+2017-12-07 08:42:40,684 - stpipe.Spec2Pipeline.photom - INFO - Writing PHOTMJSR with value: 0
+2017-12-07 08:42:40,693 - stpipe.Spec2Pipeline.photom - INFO - Step photom done
+2017-12-07 08:42:40,810 - stpipe.Spec2Pipeline.extract_1d - INFO - Prefetch for EXTRACT1D reference file is 'N/A'.
+2017-12-07 08:42:40,870 - stpipe.Spec2Pipeline.extract_1d - INFO - Step extract_1d running with args (<jwst.datamodels.multislit.MultiSlitModel object at 0x110dd0c18>,).
+2017-12-07 08:42:40,889 - stpipe.Spec2Pipeline.extract_1d - INFO - No EXTRACT1D reference file will be used
+2017-12-07 08:42:40,917 - stpipe.Spec2Pipeline.extract_1d - INFO - Working on slit 10
+2017-12-07 08:42:46,950 - stpipe.Spec2Pipeline.extract_1d - WARNING - wcs.bounding_box is None
+2017-12-07 08:42:56,502 - stpipe.Spec2Pipeline.extract_1d - WARNING - No relsens for current slit, so can't compute flux.
+2017-12-07 08:42:56,582 - stpipe.Spec2Pipeline.extract_1d - INFO - Working on slit 10
+2017-12-07 08:43:02,991 - stpipe.Spec2Pipeline.extract_1d - WARNING - wcs.bounding_box is None
+2017-12-07 08:43:12,613 - stpipe.Spec2Pipeline.extract_1d - WARNING - No relsens for current slit, so can't compute flux.
+2017-12-07 08:43:12,711 - stpipe.Spec2Pipeline.extract_1d - INFO - Saving file jw11111001001_01104_00001_nrcalong_x1d.fits
+2017-12-07 08:43:13,280 - stpipe.Spec2Pipeline.extract_1d - INFO - Step extract_1d done
+2017-12-07 08:43:13,280 - stpipe.Spec2Pipeline - INFO - Finished processing product jw11111001001_01104_00001
+2017-12-07 08:43:13,280 - stpipe.Spec2Pipeline - INFO - Step.save_model jw11111001001_01104_00001_nrcalong_cal.fits
+2017-12-07 08:44:22,954 - stpipe.Spec2Pipeline - INFO - Ending calwebb_spec2
+2017-12-07 08:44:22,955 - stpipe.Spec2Pipeline - INFO - Step Spec2Pipeline done
