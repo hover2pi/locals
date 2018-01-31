@@ -31,7 +31,7 @@ class SourceCatalog(object):
     A class to ingest a JWST pipeline output to produce a source catalog
     """
     
-    def __init__(self, dirpath='/Users/jfilippazzo/Documents/Modules/locals/locals/data/nrc_grism/'):
+    def __init__(self, dirpath='/grp/jwst/ssb/test_build7.1/examples_for_dms/level2/nrc_grism/'):
         """
         Initialize the SourceCatalog object
         
