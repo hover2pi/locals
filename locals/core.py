@@ -15,7 +15,9 @@ from SEDkit import sed
 from astrodbkit import astrodb, astrocat
 from astropy.io import fits
 import astropy.table as at
+from astroquery.vizier import Vizier
 import glob
+import astropy.coordinates as coord
 
 def test():
     """
@@ -102,3 +104,5 @@ class SourceCatalog(object):
         Run astroquery to get ancillary data for each source and add to it's Source instance
         """
         pass
+        # crds = 
+        # data = Vizier.query_region()
