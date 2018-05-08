@@ -1,0 +1,25 @@
+{
+    "products": [
+        {
+            "name": "test_disperse_f335m",
+            "members": [
+                {
+                    "exptype": "SCIENCE",
+                    "expname": "dispersed_ramp_from_test.fits",
+                },
+                {
+                    "exptype": "sourcecat",
+                    "expname": "test_disperse_f335m_rate_updated_bboxradecskybox_short.ecsv",
+                },
+            ]
+        }
+    ],
+    "asn_type": "None",
+    "asn_rule": "DMSLevel2bBase",
+    "asn_pool": "dummy",
+    "code_version": "0.7.1.beta5",
+    "version_id": null,
+    "target": "singleton",
+    "program": "none"
+}
+
