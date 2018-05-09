@@ -148,10 +148,34 @@ lhs2924 = cat.sources[1]
 
 # Calculate the results
 lhs2924.results
+```
 
-```
     Setting radius to (<Quantity 0.8786209573091851 solRad>, <Quantity 0.06782337214316517 solRad>)
-```
+
+
+
+
+
+<i>Table length=15</i>
+<table id="table4767599808" class="table-striped table-bordered table-condensed">
+<thead><tr><th>param</th><th>value</th><th>unc</th><th>units</th></tr></thead>
+<thead><tr><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>name</td><td>LHS 2924</td><td>--</td><td>--</td></tr>
+<tr><td>age</td><td>6.0</td><td>4.0</td><td>Gyr</td></tr>
+<tr><td>distance</td><td>10.99</td><td>0.02</td><td>pc</td></tr>
+<tr><td>parallax</td><td>90.9962</td><td>0.12710000574588776</td><td>mas</td></tr>
+<tr><td>radius</td><td>0.8786209573091851</td><td>0.06782337214316517</td><td>solRad</td></tr>
+<tr><td>spectral_type</td><td>--</td><td>--</td><td>--</td></tr>
+<tr><td>membership</td><td>--</td><td>--</td><td>--</td></tr>
+<tr><td>fbol</td><td>6.95e-11</td><td>7.88e-13</td><td>erg / (cm2 s)</td></tr>
+<tr><td>mbol</td><td>13.913</td><td>0.012</td><td>--</td></tr>
+<tr><td>Lbol</td><td>1e+30</td><td>1.2e+28</td><td>erg / s</td></tr>
+<tr><td>Lbol_sun</td><td>-3.58</td><td>0.005</td><td>--</td></tr>
+<tr><td>Mbol</td><td>13.708</td><td>0.012</td><td>--</td></tr>
+<tr><td>logg</td><td>4.5</td><td>0.07</td><td>--</td></tr>
+<tr><td>mass</td><td>0.8896913720017506</td><td>0.0</td><td>solMass</td></tr>
+<tr><td>Teff</td><td>783</td><td>30</td><td>K</td></tr>
+</table>
 
 Hooray!
 
