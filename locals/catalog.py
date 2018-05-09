@@ -51,7 +51,8 @@ class SourceCatalog(object):
         for n,row in enumerate(self.source_list):
             ra = row['icrs_centroid'].ra
             dec = row['icrs_centroid'].dec
-            source = Source(ra=ra, dec=dec, **{k:row[k] for k in row.colnames})
+            name = 'Source {}'.format(row['id'])
+            source = Source(ra=ra, dec=dec, name=name, **{k:row[k] for k in row.colnames})
             
             # Look for photometry
             source.find_photometry()
@@ -70,6 +71,34 @@ class SourceCatalog(object):
             # Add the source to the catalog
             self.source_ids.append(int(source.id))
             self.sources.append(source)
+            
+            
+    @property
+    def results(self):
+        """
+        Generate a table of the results for every source
+        """
+        # Make a table for each result
+        tables = []
+        for source in self.sources:
+            
+            # Get the values
+            res = source.results
+            names = ['{} [{}]'.format(i,j) for i,j in zip(list(res['param']),list(res['units']))]
+            values = at.Column(['{} +/- {}'.format(i,j) if isinstance(i,(float,int)) else i for i,j in zip(list(res['value']),list(res['unc']))])
+            
+            # Fix some values
+            names[0] = 'name'
+            
+            # Make the table
+            r_table = at.Table(values, names=names)
+            
+            tables.append(r_table)
+            
+        # Make master table
+        final = at.vstack(tables)
+        
+        return final
 
 
 def make_dummy_data(x1d_file):
