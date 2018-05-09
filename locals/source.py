@@ -106,7 +106,7 @@ class Source(sed.SED):
                         pass
             
         else:
-            print("Can't find WISE photometry without coordinates!")
+            print("Can't find 2MASS photometry without coordinates!")
             
             
     def find_photometry(self, search_radius=None, catalogs=['II/246/out','II/328/allwise']):#,'V/147/sdss12','II/243/denis']):
