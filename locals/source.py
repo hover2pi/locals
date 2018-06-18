@@ -41,17 +41,11 @@ class Source(sed.SED):
         self.name = name
         self.filepath = filepath or '/Users/jfilippazzo/Desktop/dataset.hdf5'
         self.search_radius = 15*q.arcsec
-        self.ra = ra
-        self.dec = dec
-        self.icrs_centroid = None
+        self.sky_coords = ra, dec
         
         # Store metadata from source_list
         for k,v in kwargs.items():
             setattr(self, k, v)
-        
-        # Set ra and dec
-        if isinstance(ra, q.quantity.Quantity) and isinstance(dec, q.quantity.Quantity):
-            self.icrs_centroid = coord.SkyCoord(ra=ra, dec=dec, frame='icrs')
         
         
     @property
@@ -62,160 +56,6 @@ class Source(sed.SED):
         for attr in dir(self):
             if not attr.startswith('_') and attr not in ['info','find_data']:
                 print('{0: <10}: {1}'.format(attr, getattr(self, attr)))
-                
-            
-    def find_WISE(self, search_radius=None, catalogs=['II/328/allwise']):
-        """
-        Search for source parallax
-        """
-        # Make sure there are coordinates
-        if isinstance(self.icrs_centroid, coord.sky_coordinate.SkyCoord):
-            
-            viz_cat = Vizier.query_region(self.icrs_centroid, radius=search_radius or self.search_radius, catalog=catalogs)
-            
-            if len(viz_cat)>0:
-                wise = viz_cat[0][0]
-            
-                for band in ['W1mag','W2mag','W3mag','W4mag']:
-                    try:
-                        mag, unc = list(wise[[band,'e_'+band]])
-                        self.add_photometry(VIZ_SVO.get(band), float(mag), float(unc))
-                    except IOError:
-                        pass
-            
-        else:
-            print("Can't find WISE photometry without coordinates!")
-            
-    def find_2MASS(self, search_radius=None, catalogs=['II/246/out']):
-        """
-        Search for source parallax
-        """
-        # Make sure there are coordinates
-        if isinstance(self.icrs_centroid, coord.sky_coordinate.SkyCoord):
-            
-            viz_cat = Vizier.query_region(self.icrs_centroid, radius=search_radius or self.search_radius, catalog=catalogs)
-            
-            if len(viz_cat)>0:
-                tmass = viz_cat[0][0]
-            
-                for band in ['Jmag','Hmag','Kmag']:
-                    try:
-                        mag, unc = list(tmass[[band,'e_'+band]])
-                        self.add_photometry(VIZ_SVO.get(band), float(mag), float(unc))
-                    except IOError:
-                        pass
-            
-        else:
-            print("Can't find 2MASS photometry without coordinates!")
-            
-            
-    def find_photometry(self, search_radius=None, catalogs=['II/246/out','II/328/allwise']):#,'V/147/sdss12','II/243/denis']):
-        """
-        Search for source photometry
-        """
-        # Make sure there are coordinates
-        if isinstance(self.icrs_centroid, coord.sky_coordinate.SkyCoord):
-            
-            # Get the ICRS coordinates from the table and perform Vizier query
-            self.raw_photometry = Vizier.query_region(self.icrs_centroid, radius=search_radius or self.search_radius, catalog=catalogs)
-            keys = self.raw_photometry.keys()
-        
-            # Process the photometry
-            new_tables = []
-            for name,table in zip(keys,self.raw_photometry):
-            
-                new_tables.append(self._process_table(name, table))
-            
-            # Put the data together
-            if new_tables:
-                photometry = at.vstack(new_tables)
-            
-                # Get the SVO names so the Bandpass object can be created
-                photometry['band'] = [VIZ_SVO.get(b) for b in photometry['band']]
-            
-                # Add them to the photometry table
-                for row in photometry:
-                    data = list(row)
-                    self.add_photometry(data[0], float(data[1]), float(data[2]))
-            
-        else:
-            print("Can't find photometry without coordinates!")
-            
-            
-    def find_parallax(self, search_radius=None, catalogs=['I/345/gaia2']):
-        """
-        Search for source parallax
-        """
-        # Make sure there are coordinates
-        if isinstance(self.icrs_centroid, coord.sky_coordinate.SkyCoord):
-            parallaxes = Vizier.query_region(self.icrs_centroid, radius=search_radius or self.search_radius, catalog=catalogs)
-            
-            if parallaxes:
-                # Get the ICRS coordinates from the table and perform Vizier query
-                self.raw_parallaxes = parallaxes
-            
-                parallax = list(self.raw_parallaxes[0][0][['Plx','e_Plx']])
-            
-                self.parallax = parallax[0]*q.mas, parallax[1]*q.mas
-            
-                # Get Gband while we're here
-                try:
-                    mag, unc = list(self.raw_parallaxes[0][0][['Gmag','e_Gmag']])
-                    self.add_photometry('Gaia.G', mag, unc)
-                except:
-                    pass
-            
-        else:
-            print("Can't find parallaxes without coordinates!")
-        
-        
-    @staticmethod
-    def _process_table(name, table):
-        """Split a row of multiple measurements into a table
-        
-        Parameters
-        ----------
-        name: str
-            The name of the table
-        table: astropy.table.Table
-            The table of data
-        
-        Returns
-        -------
-        astropy.table.Table
-            The new table
-        """
-        # Get the table params
-        params = PARAMS.get(name)
-        
-        if params:
-        
-            # Make empty table
-            new_table = at.Table()
-        
-            # Get the values to seed
-            for k,v in params.items():
-                if k not in ['col','errs']:
-                
-                    # Get the measurement column
-                    new_col = k
-                
-                    # Add the data
-                    new_col_keys = params[new_col]
-                    new_col_vals = list(table[new_col_keys][0])
-                    new_col_errs = list(table[params['errs']][0])
-        
-            # Add a new column with the keys to split
-            new_table[params['col']] = new_col_keys
-        
-            # Add a new column with the values and errors
-            new_table[new_col] = new_col_vals
-            new_table[new_col+'_unc'] = new_col_errs
-        
-            return new_table
-            
-        else:
-            print('Please add {} to PARAMS.'.format(name))
 
 
     def save(filepath=''):

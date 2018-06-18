@@ -55,10 +55,11 @@ class SourceCatalog(object):
             source = Source(ra=ra, dec=dec, name=name, **{k:row[k] for k in row.colnames})
             
             # Look for photometry
-            source.find_photometry()
+            source.find_2MASS()
+            source.find_WISE()
             
             # Look for distance
-            source.find_parallax()
+            source.find_Gaia()
             
             # Add observed JWST photometry to the source
             # TODO
