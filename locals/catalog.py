@@ -56,7 +56,7 @@ class SourceCatalog(object):
             
             # Look for photometry
             source.find_photometry()
-
+            
             # Look for distance
             source.find_parallax()
             
