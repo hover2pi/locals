@@ -22,6 +22,27 @@ import pkg_resources
 import astropy.units as q
 import h5py
 
+color_cuts = {'brown_dwarfs': {''}}
+
+def color_cut(photometry):
+    """Test to see if the source should be excluded given the color cut
+    
+    """
+    pass
+    
+    
+def dummy_photometry():
+    """Make a table of fake photometry"""
+    table = at.Table(names=('id','band','magnitude','magnitude_unc'), dtype=(int,'S20',float,float))
+    
+    table.add_row([10,'NIRISS.F090W', 16.2, 0.1])
+    table.add_row([10,'NIRISS.F200W', 14.2, 0.2])
+    
+    table.add_row([13,'NIRISS.F090W', 14.0, 0.1])
+    table.add_row([13,'NIRISS.F200W', 10.98, 0.14])
+    
+    return table
+    
 
 class SourceCatalog(object):
     """
@@ -46,6 +67,9 @@ class SourceCatalog(object):
         self.sources = []
         self.source_ids = []
         self.x1d_file = glob.glob(os.path.join(self.dirpath,'*_x1d.fits'))[0]
+        self.photometry = dummy_photometry()
+        
+        make_dummy_data(self.x1d_file)
         
         # Make a Source object for each row in the source_list
         for n,row in enumerate(self.source_list):
@@ -54,24 +78,33 @@ class SourceCatalog(object):
             name = 'Source {}'.format(row['id'])
             source = Source(ra=ra, dec=dec, name=name, **{k:row[k] for k in row.colnames})
             
+            # Add the JWST photometry for this source
+            for phot in self.photometry:
+                if phot['id']==row['id']:
+                    source.add_photometry(phot['band'], phot['magnitude'], phot['magnitude_unc'])
+            
             # Look for photometry
+            source.find_SDSS()
             source.find_2MASS()
             source.find_WISE()
+            source.find_PanSTARRS()
             
             # Look for distance
             source.find_Gaia()
             
             # Add observed JWST photometry to the source
-            # TODO
+            # cut = color_cut(source.photometry)
+            keep = True
+            if keep:
             
-            # Add observed WFSS spectrum to the source
-            wave_units = q.um
-            flux_units = q.erg/q.s/q.cm**2/q.AA
-            source.add_spectrum_file(self.x1d_file, wave_units, flux_units, ext=('EXTRACT1D', n+1))
+                # Add observed WFSS spectrum to the source
+                wave_units = q.um
+                flux_units = q.erg/q.s/q.cm**2/q.AA
+                source.add_spectrum_file(self.x1d_file, wave_units, flux_units, ext=('EXTRACT1D', n+1))
             
-            # Add the source to the catalog
-            self.source_ids.append(int(source.id))
-            self.sources.append(source)
+                # Add the source to the catalog
+                self.source_ids.append(int(source.id))
+                self.sources.append(source)
             
             
     @property
@@ -111,6 +144,7 @@ def make_dummy_data(x1d_file):
     # LHS 2924
     dummy_file = '/Users/jfilippazzo/Dropbox/BDNYC_spectra/SpeX/IRTF Library (Prism+LXD)/M9V_LHS2924.fits'
     dummy_data = fits.getdata(dummy_file)
+    dummy_data = [i[np.where(np.logical_and(dummy_data[0]>1.65,dummy_data[0]<2.35))] for i in dummy_data]
     dummy_rec = np.rec.array(list(zip(*dummy_data)), formats='float32,float32,float32', names='WAVELENGTH,FLUX,ERROR')
     hdu[2].data = dummy_rec
     
