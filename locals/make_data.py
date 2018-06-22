@@ -36,7 +36,7 @@ def generate_data(path=resource_filename('locals', 'data/fake/'), mag_range=(11.
     cat.write(catpath)
     
     # Open the x1d file
-    hdu = fits.open(resource_filename('locals', 'data/template_x1d.fits')
+    hdu = fits.open(resource_filename('locals', 'data/template_x1d.fits'))
     
     # Make Spectrum objects from models at R=150
     wavelength = np.arange(0.05,2.6,0.0001)[::66]*q.um

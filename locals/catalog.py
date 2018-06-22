@@ -16,6 +16,7 @@ import h5py
 import astropy.units as q
 import astropy.table as at
 import astropy.coordinates as coord
+import astropy.io.ascii as ii
 from astropy.io import fits
 from astroquery.vizier import Vizier
 from SEDkit import sed
@@ -44,10 +45,11 @@ class SourceCatalog(object):
         self.source_list = at.Table.read(self.cat_file, format='ascii.ecsv')
         self.sources = []
         self.source_ids = []
-        self.x1d_file = glob.glob(os.path.join(self.dirpath,'*_x1d.fits'))[0]
-        self.photometry = dummy_photometry()
+        self.x1d_files = glob.glob(os.path.join(self.dirpath,'*_x1d.fits'))
+        self.phot_files = glob.glob(os.path.join(self.dirpath,'*_phot.csv'))
         
-        make_dummy_data(self.x1d_file)
+        # Put all photometry into one table
+        self.photometry = at.vstack([ii.read(f) for f in self.phot_files])
         
         # Make a Source object for each row in the source_list
         for n,row in enumerate(self.source_list):
@@ -75,10 +77,12 @@ class SourceCatalog(object):
             keep = True
             if keep:
             
-                # Add observed WFSS spectrum to the source
+                # Add observed WFSS spectra to the source
                 wave_units = q.um
                 flux_units = q.erg/q.s/q.cm**2/q.AA
-                src.add_spectrum_file(self.x1d_file, wave_units, flux_units, ext=('EXTRACT1D', n+1))
+                
+                for x1d in self.x1d_files:
+                    src.add_spectrum_file(x1d, wave_units, flux_units, ext=('EXTRACT1D', n+1))
             
                 # Add the source to the catalog
                 self.source_ids.append(int(source.id))
