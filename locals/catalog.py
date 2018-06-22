@@ -10,38 +10,16 @@ Low-mass Object Characterization by AnaLyzing Slitless Spectroscopy (LOCALS) is 
 """
 import os
 import numpy as np
-from astrodbkit import astrodb
-from SEDkit import sed
-from .source import Source
-from astropy.io import fits
-import astropy.table as at
-from astroquery.vizier import Vizier
 import glob
-import astropy.coordinates as coord
 import pkg_resources
-import astropy.units as q
 import h5py
-
-color_cuts = {'brown_dwarfs': {''}}
-
-def color_cut(photometry):
-    """Test to see if the source should be excluded given the color cut
-    
-    """
-    pass
-    
-    
-def dummy_photometry():
-    """Make a table of fake photometry"""
-    table = at.Table(names=('id','band','magnitude','magnitude_unc'), dtype=(int,'S20',float,float))
-    
-    table.add_row([10,'NIRISS.F090W', 16.2, 0.1])
-    table.add_row([10,'NIRISS.F200W', 14.2, 0.2])
-    
-    table.add_row([13,'NIRISS.F090W', 14.0, 0.1])
-    table.add_row([13,'NIRISS.F200W', 10.98, 0.14])
-    
-    return table
+import astropy.units as q
+import astropy.table as at
+import astropy.coordinates as coord
+from astropy.io import fits
+from astroquery.vizier import Vizier
+from SEDkit import sed
+from . import colors, make_data, source
     
 
 class SourceCatalog(object):
@@ -76,21 +54,21 @@ class SourceCatalog(object):
             ra = row['icrs_centroid'].ra
             dec = row['icrs_centroid'].dec
             name = 'Source {}'.format(row['id'])
-            source = Source(ra=ra, dec=dec, name=name, **{k:row[k] for k in row.colnames})
+            src = source.Source(ra=ra, dec=dec, name=name, **{k:row[k] for k in row.colnames})
             
             # Add the JWST photometry for this source
             for phot in self.photometry:
                 if phot['id']==row['id']:
-                    source.add_photometry(phot['band'], phot['magnitude'], phot['magnitude_unc'])
+                    src.add_photometry(phot['band'], phot['magnitude'], phot['magnitude_unc'])
             
             # Look for photometry
-            source.find_SDSS()
-            source.find_2MASS()
-            source.find_WISE()
-            source.find_PanSTARRS()
+            src.find_SDSS()
+            src.find_2MASS()
+            src.find_WISE()
+            src.find_PanSTARRS()
             
             # Look for distance
-            source.find_Gaia()
+            src.find_Gaia()
             
             # Add observed JWST photometry to the source
             # cut = color_cut(source.photometry)
@@ -100,11 +78,11 @@ class SourceCatalog(object):
                 # Add observed WFSS spectrum to the source
                 wave_units = q.um
                 flux_units = q.erg/q.s/q.cm**2/q.AA
-                source.add_spectrum_file(self.x1d_file, wave_units, flux_units, ext=('EXTRACT1D', n+1))
+                src.add_spectrum_file(self.x1d_file, wave_units, flux_units, ext=('EXTRACT1D', n+1))
             
                 # Add the source to the catalog
                 self.source_ids.append(int(source.id))
-                self.sources.append(source)
+                self.sources.append(src)
             
             
     @property
@@ -114,10 +92,10 @@ class SourceCatalog(object):
         """
         # Make a table for each result
         tables = []
-        for source in self.sources:
+        for src in self.sources:
             
             # Get the values
-            res = source.results
+            res = src.results
             names = ['{} [{}]'.format(i,j) for i,j in zip(list(res['param']),list(res['units']))]
             values = at.Column(['{} +/- {}'.format(i,j) if isinstance(i,(float,int)) else i for i,j in zip(list(res['value']),list(res['unc']))])
             
@@ -133,29 +111,4 @@ class SourceCatalog(object):
         final = at.vstack(tables)
         
         return final
-
-
-def make_dummy_data(x1d_file):
-    """Put real spectra into the x1d file for testing"""
-    import copy
-    
-    hdu = fits.open(x1d_file)
-    
-    # LHS 2924
-    dummy_file = '/Users/jfilippazzo/Dropbox/BDNYC_spectra/SpeX/IRTF Library (Prism+LXD)/M9V_LHS2924.fits'
-    dummy_data = fits.getdata(dummy_file)
-    dummy_data = [i[np.where(np.logical_and(dummy_data[0]>1.65,dummy_data[0]<2.35))] for i in dummy_data]
-    dummy_rec = np.rec.array(list(zip(*dummy_data)), formats='float32,float32,float32', names='WAVELENGTH,FLUX,ERROR')
-    hdu[2].data = dummy_rec
-    
-    # APMP 0559 (subdwarf!)
-    dummy_file = '/Users/jfilippazzo/Dropbox/BDNYC_spectra/SpeX/Prism/! Subdwarf spectra that need source_ids (not in db yet!)/spex-prism_APMPM0559-2903_20051231_BUR06A.txt'
-    dummy_data = np.genfromtxt(dummy_file, unpack=True)
-    dummy_rec = np.rec.array(list(zip(*dummy_data)), formats='float32,float32,float32', names='WAVELENGTH,FLUX,ERROR')
-    hdu[1].data = dummy_rec
-    
-    # Write the new file
-    hdu.writeto(x1d_file.replace('_x1d','_dummy_x1d'), overwrite=True)
-    
-    hdu.close()
     
