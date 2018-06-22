@@ -25,18 +25,20 @@ def generate_data(path=resource_filename('locals', 'data/fake/'), mag_range=(11.
         The path to the target directory
     """
     # Get some random spectra
-    # files = glob.glob('/user/jfilippazzo/Models/ACES/default/*.fits')[::50]
-    files = glob.glob('/Users/jfilippazzo/Documents/Modules/_DEPRECATED/limb_dark_jeff/limb/specint/*.fits')[::20]
-     
+    try:
+        files = glob.glob('/user/jfilippazzo/Models/ACES/default/*.fits')[::50]
+    except:
+        files = glob.glob('/Users/jfilippazzo/Documents/Modules/_DEPRECATED/limb_dark_jeff/limb/specint/*.fits')[::20]
+    
     # Make a fake source catalog (with only essential columns for now)
     catpath = os.path.join(path,'fake_source_catalog.ecsv')
     ids = list(range(len(files)))
-    coords = [SkyCoord(ra=89.7455*q.deg, dec=-29.05744*q.deg, frame='icrs') for i in ids]
+    coords = SkyCoord([89.7455]*len(ids), [-29.05744]*len(ids), unit='deg', frame='icrs')
     cat = at.QTable([ids,coords], names=('id','icrs_centroid'))
     cat.write(catpath)
     
     # Open the x1d file
-    hdu = fits.open(resource_filename('locals', 'data/template_x1d.fits'))
+    header = fits.getheader(resource_filename('locals', 'data/template_x1d.fits'))
     
     # Make Spectrum objects from models at R=150
     wavelength = np.arange(0.05,2.6,0.0001)[::66]*q.um
@@ -45,9 +47,7 @@ def generate_data(path=resource_filename('locals', 'data/fake/'), mag_range=(11.
     spectra = []
     f200w = Bandpass('NIRISS.F200W')
     f200w.wave_units = q.um
-    
-    # Iterate over sources
-    for file in files[:1]:
+    for file in files:
         
         # Create Spectrum
         flux = fits.getdata(file)[-1][::66]*q.erg/q.s/q.cm**2/q.AA
@@ -71,8 +71,7 @@ def generate_data(path=resource_filename('locals', 'data/fake/'), mag_range=(11.
         
             # Make x1d file for spectra
             x1d_file = os.path.join(path,'{}_x1d.fits'.format(band))
-            x1d_hdu = fits.HDUList()
-            x1d_hdu.append(copy(hdu[0]))
+            x1d_hdu = fits.HDUList(fits.PrimaryHDU(header=header))
         
             # Make csv file for photometry
             phot_file = os.path.join(path,'{}_phot.csv'.format(band))
@@ -99,7 +98,6 @@ def generate_data(path=resource_filename('locals', 'data/fake/'), mag_range=(11.
             del phot_data
             
             # Write the x1d file
-            x1d_hdu.append(hdu[-1])
             x1d_hdu.writeto(x1d_file, overwrite=True)
             del x1d_hdu
             

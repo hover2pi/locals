@@ -19,16 +19,16 @@ import astropy.coordinates as coord
 import astropy.io.ascii as ii
 from astropy.io import fits
 from astroquery.vizier import Vizier
-from SEDkit import sed
+from SEDkit import sed, catalog
 from . import colors, make_data, source
     
 
-class SourceCatalog(object):
+class SourceCatalog(catalog.SEDCatalog):
     """
     A class to ingest a JWST pipeline output to produce a source catalog
     """
     
-    def __init__(self, dirpath, dummy=True):
+    def __init__(self, dirpath, verbose=False):
         """
         Initialize the SourceCatalog object
         
@@ -37,8 +37,12 @@ class SourceCatalog(object):
         dirpath: str
             The path to the JWST pipeline output
         """
+        # Inherit from SEDkit.catalog.SEDCatalog
+        super().__init__()
+        
         # The path to the pipeline output directory
         self.dirpath = dirpath
+        self.verbose = verbose
         
         # Get the source catalog (_cat.ecsv)
         self.cat_file = glob.glob(os.path.join(self.dirpath,'*.ecsv'))[0]
@@ -56,63 +60,60 @@ class SourceCatalog(object):
             ra = row['icrs_centroid'].ra
             dec = row['icrs_centroid'].dec
             name = 'Source {}'.format(row['id'])
-            src = source.Source(ra=ra, dec=dec, name=name, **{k:row[k] for k in row.colnames})
+            src = source.Source(ra=ra, dec=dec, name=name, verbose=self.verbose, **{k:row[k] for k in row.colnames})
             
             # Add the JWST photometry for this source
             for phot in self.photometry:
                 if phot['id']==row['id']:
                     src.add_photometry(phot['band'], phot['magnitude'], phot['magnitude_unc'])
             
-            # Look for photometry
-            src.find_SDSS()
-            src.find_2MASS()
-            src.find_WISE()
-            src.find_PanSTARRS()
+            # # Look for photometry
+            # src.find_SDSS()
+            # src.find_2MASS()
+            # src.find_WISE()
+            # src.find_PanSTARRS()
             
             # Look for distance
-            src.find_Gaia()
+            # src.find_Gaia()
             
-            # Add observed JWST photometry to the source
-            # cut = color_cut(source.photometry)
-            keep = True
+            # Check to see if the source makes the color cut
+            keep = colors.in_color_range(src.photometry, 'brown dwarfs')
             if keep:
-            
-                # Add observed WFSS spectra to the source
-                wave_units = q.um
-                flux_units = q.erg/q.s/q.cm**2/q.AA
                 
+                # Add observed WFSS spectra to the source
                 for x1d in self.x1d_files:
-                    src.add_spectrum_file(x1d, wave_units, flux_units, ext=('EXTRACT1D', n+1))
-            
+                    src.add_spectrum_file(x1d, q.um, q.erg/q.s/q.cm**2/q.AA, ext=n+1)
+                    
                 # Add the source to the catalog
-                self.source_ids.append(int(source.id))
-                self.sources.append(src)
+                self.add_SED(src)
+                # self.source_ids.append(int(src.id))
+                # self.sources.append(src)
             
             
-    @property
-    def results(self):
-        """
-        Generate a table of the results for every source
-        """
-        # Make a table for each result
-        tables = []
-        for src in self.sources:
-            
-            # Get the values
-            res = src.results
-            names = ['{} [{}]'.format(i,j) for i,j in zip(list(res['param']),list(res['units']))]
-            values = at.Column(['{} +/- {}'.format(i,j) if isinstance(i,(float,int)) else i for i,j in zip(list(res['value']),list(res['unc']))])
-            
-            # Fix some values
-            names[0] = 'name'
-            
-            # Make the table
-            r_table = at.Table(values, names=names)
-            
-            tables.append(r_table)
-            
-        # Make master table
-        final = at.vstack(tables)
-        
-        return final
+    # @property
+    # def catalog(self):
+    #     """
+    #     Generate a table of the results for every source
+    #     """
+    #     # Make a table for each result
+    #     tables = []
+    #     for src in self.sources:
+    #
+    #         # Get the values
+    #         res = src.results
+    #         names = ['{} [{}]'.format(i,j) for i,j in zip(list(res['param']),list(res['units']))]
+    #         values = at.Column(['{} +/- {}'.format(i,j) if isinstance(i,(float,int)) else i for i,j in zip(list(res['value']),list(res['unc']))])
+    #
+    #         # Fix some values
+    #         names[0] = 'name'
+    #
+    #         # Make the table
+    #         r_table = at.Table(values, names=names)
+    #
+    #         tables.append(r_table)
+    #
+    #     # Make master table
+    #     final = at.vstack(tables)
+    #
+    #     return final
     

@@ -36,16 +36,12 @@ class Source(sed.SED):
         Initialize the Source object with a file path
         """
         # Inherit from ArraySpectrum
-        super().__init__()
+        super().__init__(**kwargs)
         
         self.name = name
         self.filepath = filepath or '/Users/jfilippazzo/Desktop/dataset.hdf5'
         self.search_radius = 15*q.arcsec
         self.sky_coords = ra, dec
-        
-        # Store metadata from source_list
-        for k,v in kwargs.items():
-            setattr(self, k, v)
         
         
     @property
