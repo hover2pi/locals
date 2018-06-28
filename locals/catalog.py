@@ -28,7 +28,7 @@ class SourceCatalog(catalog.SEDCatalog):
     A class to ingest a JWST pipeline output to produce a source catalog
     """
     
-    def __init__(self, dirpath, verbose=False):
+    def __init__(self, dirpath, color_cut=None, verbose=False):
         """
         Initialize the SourceCatalog object
         
@@ -36,6 +36,8 @@ class SourceCatalog(catalog.SEDCatalog):
         ----------
         dirpath: str
             The path to the JWST pipeline output
+        color_cut: str
+            The name of the color cuts to use
         """
         # Inherit from SEDkit.catalog.SEDCatalog
         super().__init__()
@@ -47,8 +49,6 @@ class SourceCatalog(catalog.SEDCatalog):
         # Get the source catalog (_cat.ecsv)
         self.cat_file = glob.glob(os.path.join(self.dirpath,'*.ecsv'))[0]
         self.source_list = at.Table.read(self.cat_file, format='ascii.ecsv')
-        self.sources = []
-        self.source_ids = []
         self.x1d_files = glob.glob(os.path.join(self.dirpath,'*_x1d.fits'))
         self.phot_files = glob.glob(os.path.join(self.dirpath,'*_phot.csv'))
         
@@ -60,14 +60,17 @@ class SourceCatalog(catalog.SEDCatalog):
             ra = row['icrs_centroid'].ra
             dec = row['icrs_centroid'].dec
             name = 'Source {}'.format(row['id'])
-            src = source.Source(ra=ra, dec=dec, name=name, verbose=self.verbose, **{k:row[k] for k in row.colnames})
+            src = source.Source(ra=ra, dec=dec, name=name,
+                                verbose=self.verbose,
+                                **{k:row[k] for k in row.colnames})
             
             # Add the JWST photometry for this source
             for phot in self.photometry:
                 if phot['id']==row['id']:
-                    src.add_photometry(phot['band'], phot['magnitude'], phot['magnitude_unc'])
+                    src.add_photometry(phot['band'], phot['magnitude'],
+                                       phot['magnitude_unc'])
             
-            # # Look for photometry
+            # # Look for photometry (Need real coordinates for this)
             # src.find_SDSS()
             # src.find_2MASS()
             # src.find_WISE()
@@ -77,17 +80,25 @@ class SourceCatalog(catalog.SEDCatalog):
             # src.find_Gaia()
             
             # Check to see if the source makes the color cut
-            keep = colors.in_color_range(src.photometry, 'brown dwarfs')
+            src.photometry.add_index('band')
+            keep = colors.in_color_range(src.photometry, color_cut)
             if keep:
                 
                 # Add observed WFSS spectra to the source
                 for x1d in self.x1d_files:
-                    src.add_spectrum_file(x1d, q.um, q.erg/q.s/q.cm**2/q.AA, ext=n+1)
+                    funit = q.erg/q.s/q.cm**2/q.AA
+                    src.add_spectrum_file(x1d, q.um, funit, ext=n+1)
+                    
+                # Fit a blackbody
+                src.fit_blackbody()
                     
                 # Add the source to the catalog
                 self.add_SED(src)
-                # self.source_ids.append(int(src.id))
-                # self.sources.append(src)
+                
+        print("{}/{} sources added to catalog{}"\
+              .format(len(self.results), len(self.source_list),
+              " after applying '{}' color cuts".format(color_cut)
+              if color_cut is not None else ''))
             
             
     # @property
