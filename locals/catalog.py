@@ -19,11 +19,11 @@ import astropy.coordinates as coord
 import astropy.io.ascii as ii
 from astropy.io import fits
 from astroquery.vizier import Vizier
-from SEDkit import sed, catalog
+from SEDkit import SED, SEDCatalog
 from . import colors, make_data, source
     
 
-class SourceCatalog(catalog.SEDCatalog):
+class SourceCatalog(SEDCatalog):
     """
     A class to ingest a JWST pipeline output to produce a source catalog
     """
@@ -60,13 +60,12 @@ class SourceCatalog(catalog.SEDCatalog):
             ra = row['icrs_centroid'].ra
             dec = row['icrs_centroid'].dec
             name = 'Source {}'.format(row['id'])
-            src = source.Source(ra=ra, dec=dec, name=name,
-                                verbose=self.verbose,
-                                **{k:row[k] for k in row.colnames})
+            src = SED(ra=ra, dec=dec, name=name, verbose=self.verbose,
+                      **{k:row[k] for k in row.colnames})
             
             # Add the JWST photometry for this source
             for phot in self.photometry:
-                if phot['id']==row['id']:
+                if phot['id'] == row['id']:
                     src.add_photometry(phot['band'], phot['magnitude'],
                                        phot['magnitude_unc'])
             
@@ -91,6 +90,10 @@ class SourceCatalog(catalog.SEDCatalog):
                     
                 # Fit a blackbody
                 src.fit_blackbody()
+                
+                # Fit spectral type
+                src.fit_spectral_type()
+                # src.fit_spectral_index()
                     
                 # Add the source to the catalog
                 self.add_SED(src)
@@ -99,32 +102,5 @@ class SourceCatalog(catalog.SEDCatalog):
               .format(len(self.results), len(self.source_list),
               " after applying '{}' color cuts".format(color_cut)
               if color_cut is not None else ''))
-            
-            
-    # @property
-    # def catalog(self):
-    #     """
-    #     Generate a table of the results for every source
-    #     """
-    #     # Make a table for each result
-    #     tables = []
-    #     for src in self.sources:
-    #
-    #         # Get the values
-    #         res = src.results
-    #         names = ['{} [{}]'.format(i,j) for i,j in zip(list(res['param']),list(res['units']))]
-    #         values = at.Column(['{} +/- {}'.format(i,j) if isinstance(i,(float,int)) else i for i,j in zip(list(res['value']),list(res['unc']))])
-    #
-    #         # Fix some values
-    #         names[0] = 'name'
-    #
-    #         # Make the table
-    #         r_table = at.Table(values, names=names)
-    #
-    #         tables.append(r_table)
-    #
-    #     # Make master table
-    #     final = at.vstack(tables)
-    #
-    #     return final
+
     
