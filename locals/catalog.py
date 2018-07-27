@@ -20,7 +20,8 @@ import astropy.io.ascii as ii
 from astropy.io import fits
 from astroquery.vizier import Vizier
 from SEDkit import SED, SEDCatalog
-from . import colors, make_data, source
+from . import colors
+from . import make_data
     
 
 class SourceCatalog(SEDCatalog):

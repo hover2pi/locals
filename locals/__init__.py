@@ -1,1 +1,1 @@
-from . import catalog, source, make_data, colors
+from .catalog import SourceCatalog
