@@ -90,7 +90,7 @@ class SourceCatalog(SEDCatalog):
                     src.add_spectrum_file(x1d, q.um, funit, ext=n+1)
                     
                 # Fit a blackbody
-                src.fit_blackbody()
+                # src.fit_blackbody()
                 
                 # Fit spectral type
                 src.fit_spectral_type()
