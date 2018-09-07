@@ -78,7 +78,7 @@ def generate_data(path=resource_filename('locals', 'data/fake/'), mag_range=(11.
             phot_data = at.Table(names=('id','band','magnitude','magnitude_unc'), dtype=(int,'S20',float,float))
         
             # Iterate over spectra
-            for id,spec in enumerate(spectra):
+            for id,(f,spec) in enumerate(zip(files,spectra)):
             
                 # Trim spectrum to bandpass for x1d file
                 spec = Spectrum(*spec.spectrum, trim=[(0*q.um,bp.WavelengthMin*1E-4*q.um),(bp.WavelengthMax*1E-4*q.um,10*q.um)])
@@ -86,9 +86,20 @@ def generate_data(path=resource_filename('locals', 'data/fake/'), mag_range=(11.
                 # Calculate magnitude and add to photometry table
                 mag, mag_unc = spec.synthetic_magnitude(bp, force=True)
                 phot_data.add_row([id, band, mag, mag_unc])
+                
+                # Add source spectrum params for verification
+                params = f.split('/')[-1].split('-')
+                header['TEFF'] = int(params[0].replace('lte',''))
+                header['LOGG'] = float(params[1][:4])
+                header['FEH'] = float(params[-6][:-8].split('+')[-1])
+                header['FILEPATH'] = f
+                header['PUPIL'] = band
 
                 # Put spectrum in x1d fits file
-                data = fits.BinTableHDU(data=np.rec.array(list(zip(*spec.data)), formats='float32,float32,float32', names='WAVELENGTH,FLUX,ERROR'))
+                data = fits.BinTableHDU(data=np.rec.array(list(zip(*spec.data)),
+                                             formats='float32,float32,float32',
+                                             names='WAVELENGTH,FLUX,ERROR'),
+                                        header=header)
                 data.name = 'EXTRACT1D'
                 
                 x1d_hdu.append(data)
