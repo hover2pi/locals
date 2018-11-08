@@ -27,7 +27,7 @@ setup(
     ],
     keywords='astrophysics',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    install_requires=['numpy','astropy', 'bokeh', 'sedkit', 'svo_filters'],
+    install_requires=['numpy', 'astropy', 'bokeh', 'sedkit', 'svo_filters', 'h5py'],
     include_package_data=True,
 
 )
