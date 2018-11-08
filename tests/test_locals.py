@@ -1,5 +1,6 @@
 """Some tests to make sure the filters work as intended"""
 import unittest
+from pkg_resources import resource_filename
 
 import astropy.units as q
 

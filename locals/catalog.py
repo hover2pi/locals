@@ -20,13 +20,13 @@ import astropy.io.ascii as ii
 from astropy.io import fits
 from astroquery.vizier import Vizier
 import numpy as np
-from sedkit import SED, SEDCatalog, BTSettl
+from sedkit import SED, Catalog, BTSettl
 
 from . import colors
 from . import make_data
 
 
-class SourceCatalog(SEDCatalog):
+class SourceCatalog(Catalog):
     """
     A class to ingest a JWST pipeline output to produce a source catalog
     """

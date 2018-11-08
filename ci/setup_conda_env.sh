@@ -6,4 +6,4 @@ source activate lcl
 
 echo "Installing packages..."
 conda install flake8 beautifulsoup4 lxml numpy astropy h5py
-pip install sedkit svo_filters pytest pytest-cov coveralls
+pip install astroquery sedkit svo_filters pytest pytest-cov coveralls
