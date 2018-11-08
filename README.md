@@ -1,16 +1,20 @@
-
 # How to use `locals`
+
+[![Build Status](https://travis-ci.org/hover2pi/locals.svg?branch=master)](https://travis-ci.org/hover2pi/locals)
+[![Coverage Status](https://coveralls.io/repos/github/hover2pi/locals/badge.svg?branch=master&service=github)](https://coveralls.io/github/hover2pi/locals?branch=master&service=github)
+[![Documentation Status](https://readthedocs.org/projects/locals/badge/?version=latest)](https://locals.readthedocs.io/en/latest/?badge=latest)
+
 `locals` is a pure Python package that ingests JWST Wide-Field Slitless Spectroscopy data and returns a source catalog of all the low-mass stars in the field along with their calculated fundamental and secondary parameters.
 
 ### Requirements
-- pip install SEDkit
+- pip install sedkit
 - pip install bokeh
 
 
 ```python
 # Imports
 from locals import source, catalog
-from SEDkit import sed, spectrum, synphot
+from sedkit import sed, spectrum, synphot
 import astropy.units as q
 import astropy.table as at
 import numpy as np

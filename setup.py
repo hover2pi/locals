@@ -13,7 +13,7 @@ from os import path
 
 setup(
     name='locals',
-    version='0.1.0',
+    version='0.2.0',
     description='Low-mass Object Characterization by AnaLyzing Slitless Spectroscopy',
     url='https://github.com/hover2pi/locals',
     author='Joe Filippazzo',
@@ -27,7 +27,7 @@ setup(
     ],
     keywords='astrophysics',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    install_requires=['numpy','astropy','bokeh','SEDkit'],
+    install_requires=['numpy','astropy', 'bokeh', 'sedkit', 'svo_filters'],
     include_package_data=True,
 
 )
