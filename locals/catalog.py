@@ -11,7 +11,6 @@ Low-mass Object Characterization by AnaLyzing Slitless Spectroscopy (LOCALS) is 
 import os
 import glob
 import pkg_resources
-import h5py
 
 import astropy.units as q
 import astropy.table as at
