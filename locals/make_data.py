@@ -3,20 +3,98 @@ from copy import copy
 import glob
 import os
 from pkg_resources import resource_filename
+from random import randrange
 
+from astroquery.simbad import Simbad
 import astropy.table as at
 import astropy.units as q
 import astropy.io.ascii as ii
 from astropy.io import fits
 from astropy.coordinates import SkyCoord
 import numpy as np
-from sedkit.spectrum import Spectrum
+from sedkit import Spectrum, SED, Catalog
+from sedkit.relations import DwarfSequence
 from svo_filters import Filter
 
 
 # List the NIRISS bands available for WFSS mode and their wavelength (min,max) in microns
 NIRISS_bands = ['NIRISS.F090W', 'NIRISS.F115W', 'NIRISS.F140M', 'NIRISS.F150W', 'NIRISS.F158M', 'NIRISS.F200W']
 
+# Customize Simbad query
+Simbad.ROW_LIMIT = -1
+Simbad.TIMEOUT = 300
+Simbad.add_votable_fields('otype', 'sptype', 'id', 'ubv', 'fluxdata(V)', 'fluxdata(J)')
+
+
+def field_simulation(target, instrument='NIRISS', radius=5*q.arcmin):
+    """
+    Simulate a JWST pipeline catalog of WFSS data for all the stars in the vicinity
+    of the provided target
+
+    Parmaters
+    ---------
+    target: str
+        The name of the central target
+    instrument: str
+        The instrument to simulate, ['NIRISS', 'NIRCam']
+    radius: astropy.units.quantity.Quantity
+        The radius of the catalog
+    """
+    # Query sources
+    results = Simbad.query_region(target, radius=radius)
+    print('{} sources found within {} of {}'.format(len(results), radius, target))
+
+    # Make a Catalog
+    cat = Catalog()
+
+    # Make an SED for each and add it to the catalog
+    for star in results:
+
+        # Omit planets
+        if 'planet' not in star['OTYPE'].decode("utf-8").lower():
+
+            # Make the SED from the MAIN_ID and find photometry in 2MASS
+            x = SED(name=star['MAIN_ID'], method_list=['find_2MASS'])
+            phot = x.photometry
+
+            # Make sure there is 2MASS photometry
+            if phot is not None:
+
+                # If no spectral type, infer from 2MASS
+                if x.spectral_type is None:
+
+                    # 2MASS photometry
+                    jmag, junc = list(p[p['band'] == '2MASS.J'][0][['app_magnitude', 'app_magnitude_unc']])
+                    hmag, hunc = list(p[p['band'] == '2MASS.H'][0][['app_magnitude', 'app_magnitude_unc']])
+                    kmag, kunc = list(p[p['band'] == '2MASS.Ks'][0][['app_magnitude', 'app_magnitude_unc']])
+
+                    # Colors
+                    j_h, j_h_unc = jmag - hmag, np.sqrt(junc**2 + hunc**2)
+                    j_k, j_k_unc = jmag - kmag, np.sqrt(junc**2 + kunc**2)
+                    h_k, h_k_unc = hmag - kmag, np.sqrt(hunc**2 + kunc**2)
+
+                    # Infer spectral type from color
+                    ds = DwarfSequence('')
+
+                # Require spectral type and 2MASS photometry
+            
+
+                # Make a spectrum for the measured (or randomized) spectral type
+                # spt = x.spectral_type[0]
+
+                # Resample to the GR150 wavelengths
+            
+
+                # Add it to the SED so it gets normalized to the photometry
+            
+
+                # Calculate the synthetic photometry for the NIRISS bands
+            
+
+                # Add the SED to the catalog
+                cat.add_SED(x)
+
+    return results, cat
 
 def generate_data(path=resource_filename('locals', 'data/fake/'), mag_range=(11.13,18)):
     """Generate a fake JWST pipeline catalog replete with photometry and spectra

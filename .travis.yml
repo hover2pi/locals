@@ -7,7 +7,6 @@ python:
 
 install:
   - pip install git+https://github.com/hover2pi/sedkit#egg=sedkit
-  - conda install -c conda-forge lmfit
   - pip install -r requirements_dev.txt
   - pip install pytest pytest-cov coveralls
 
