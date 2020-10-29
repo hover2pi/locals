@@ -6,19 +6,13 @@
 
 `locals` is a pure Python package that ingests JWST Wide-Field Slitless Spectroscopy data and returns a source catalog of all the low-mass stars in the field along with their calculated fundamental and secondary parameters.
 
-### Requirements
-- pip install sedkit
-- pip install bokeh
-
+### Imports
 
 ```python
 # Imports
 from locals import source, catalog
 from sedkit import sed, spectrum, synphot
 import astropy.units as q
-import astropy.table as at
-import numpy as np
-from pkg_resources import resource_filename
 from bokeh.io import output_notebook, show
 output_notebook()
 ```
@@ -33,8 +27,8 @@ Let's pretend one of the brown dwarfs in our field is [LHS2924](http://simbad.u-
 
 ```python
 # Coordinates of LHS 2924 (Usually taken from the WFSS source_list)
-ra = 217.180137*q.deg
-dec = 33.177539*q.deg
+ra = 217.180137 * q.deg
+dec = 33.177539 * q.deg
 
 # Make the source object
 src = source.Source(ra=ra, dec=dec, name='LHS 2924')
@@ -46,11 +40,10 @@ src.find_photometry()
 src.find_parallax()
 
 # Take a look
-print('\n',src.photometry,'\n')
+print(src.photometry)
 ```
 
     Setting age to (<Quantity 6.0 Gyr>, <Quantity 4.0 Gyr>)
-    Make this handle asymmetric uncertainties!
     
        band          eff         app_magnitude ...      abs_flux_unc      bandpass
                      um                       ... erg / (Angstrom cm2 s)         
@@ -66,14 +59,14 @@ print('\n',src.photometry,'\n')
     
 
 
-Now we can calculate the fundamental parameters and plot the results.
+Now we can calculate the fundamental parameters and print the results.
 
 
 ```python
 src.results
 ```
 
-    Setting radius to (<Quantity 0.8786209573091851 solRad>, <Quantity 0.06782337214316517 solRad>)
+Setting radius to (<Quantity 0.8786209573091851 solRad>, <Quantity 0.06782337214316517 solRad>)
 
 
 
@@ -114,9 +107,6 @@ cat = catalog.SourceCatalog(cat_path)
 ```
 
     Setting age to (<Quantity 6.0 Gyr>, <Quantity 4.0 Gyr>)
-    Make this handle asymmetric uncertainties!
-    Setting age to (<Quantity 6.0 Gyr>, <Quantity 4.0 Gyr>)
-    Make this handle asymmetric uncertainties!
     Warning, 1 of 546 bins contained negative fluxes; they have been set to zero.
 
 

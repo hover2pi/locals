@@ -1,14 +1,11 @@
 """A module to generate fake spectra and photometry for WFSS"""
-from copy import copy
 import glob
 import os
 from pkg_resources import resource_filename
-from random import randrange
 
 from astroquery.simbad import Simbad
 import astropy.table as at
 import astropy.units as q
-import astropy.io.ascii as ii
 from astropy.io import fits
 from astropy.coordinates import SkyCoord
 import numpy as np
@@ -195,4 +192,3 @@ def generate_data(path=resource_filename('locals', 'data/fake/'), mag_range=(11.
 
         except IOError:
             pass
-            

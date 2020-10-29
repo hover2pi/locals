@@ -10,19 +10,14 @@ Low-mass Object Characterization by AnaLyzing Slitless Spectroscopy (LOCALS) is 
 """
 import os
 import glob
-import pkg_resources
 
 import astropy.units as q
 import astropy.table as at
-import astropy.coordinates as coord
 import astropy.io.ascii as ii
 from astropy.io import fits
-from astroquery.vizier import Vizier
-import numpy as np
 from sedkit import SED, Catalog, BTSettl
 
 from . import colors
-from . import make_data
 
 
 class SourceCatalog(Catalog):
