@@ -2,8 +2,6 @@
 import unittest
 from pkg_resources import resource_filename
 
-import astropy.units as q
-
 from locals import SourceCatalog
 
  

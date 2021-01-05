@@ -13,7 +13,6 @@ import glob
 
 import astropy.units as q
 import astropy.table as at
-import astropy.io.ascii as ii
 from astropy.io import fits
 from sedkit import SED, Catalog, BTSettl
 
@@ -43,71 +42,68 @@ class SourceCatalog(Catalog):
         self.verbose = verbose
 
         # Get the source catalog (_cat.ecsv)
-        self.cat_file = glob.glob(os.path.join(self.dirpath,'*.ecsv'))[0]
+        self.cat_file = glob.glob(os.path.join(self.dirpath, '*.ecsv'))[0]
         self.source_list = at.Table.read(self.cat_file, format='ascii.ecsv')
-        self.x1d_files = glob.glob(os.path.join(self.dirpath,'*_x1d.fits'))
-        self.phot_files = glob.glob(os.path.join(self.dirpath,'*_phot.csv'))
-
-        # Put all photometry into one table
-        self.photometry = at.vstack([ii.read(f) for f in self.phot_files])
+        self.x1d_files = glob.glob(os.path.join(self.dirpath, '*_x1d.fits'))
 
         # Load BT Settl grid
-        bt = BTSettl(resolution=1000, trim=(0.3*q.um, 3*q.um))
+        bt = BTSettl(resolution=1000, trim=(0.3 * q.um, 5 * q.um))
 
         # Make a Source object for each row in the source_list
-        for n,row in enumerate(self.source_list):
-            ra = row['icrs_centroid'].ra
-            dec = row['icrs_centroid'].dec
-            name = 'Source {}'.format(row['id'])
-            src = SED(ra=ra, dec=dec, name=name, verbose=self.verbose,
-                      **{k:row[k] for k in row.colnames})
+        for n, row in enumerate(self.source_list):
 
-            # Add the JWST photometry for this source
-            for phot in self.photometry:
-                if phot['id'] == row['id']:
-                    src.add_photometry(phot['band'], phot['magnitude'],
-                                       phot['magnitude_unc'])
+            # Only process stars
+            if row['is_star']:
 
-            # # Look for photometry (Need real coordinates for this)
-            # src.find_SDSS()
-            # src.find_2MASS()
-            # src.find_WISE()
-            # src.find_PanSTARRS()
+                # Metadata
+                ra = row['sky_centroid'].ra
+                dec = row['sky_centroid'].dec
+                name = 'Source {}'.format(row['id'])
+                src = SED(ra=ra, dec=dec, name=name, verbose=self.verbose, **{k: row[k] for k in row.colnames})
+                print("SED created for {}".format(name))
 
-            # Look for distance
-            # src.find_Gaia()
+                # JWST photometry
+                mag = row['aper_total_vegamag']
+                err = row['aper_total_vegamag_err']
+                src.add_photometry('NIRCam.F356W', mag, err)
 
-            # Check to see if the source makes the color cut
-            src.photometry.add_index('band')
-            keep = colors.in_color_range(src.photometry, color_cut)
-            if keep:
+                # Check for all-sky catalog photometry
+                src.find_SDSS()
+                src.find_2MASS()
+                src.find_WISE()
 
-                # Add observed WFSS spectra to the source
-                for x1d in self.x1d_files:
-                    header = fits.getheader(x1d, ext=n+1)
-                    funit = q.erg/q.s/q.cm**2/q.AA
-                    src.add_spectrum_file(x1d, q.um, funit, ext=n+1,
-                                          name=header['PUPIL'])
+                # Look for distance
+                src.find_Gaia()
 
-                    # Save the params for verification
-                    src.Teff_model = header['TEFF']
-                    src.logg_model = header['LOGG']
-                    src.FeH_model = header['FEH']
+                # Check to see if the source makes the color cut
+                src.photometry.add_index('band')
+                keep = colors.in_color_range(src.photometry, color_cut)
+                if keep:
 
-                # Fit a blackbody
-                # src.fit_blackbody()
+                    # Add observed WFSS spectra to the source
+                    for x1d in self.x1d_files:
+                        header = fits.getheader(x1d, ext=n+1)
+                        funit = q.erg / q.s / q.cm**2 / q.AA
 
-                # Fit spectral type
-                src.fit_spectral_type()
-                # src.fit_spectral_index()
+                        # Get extracted spectrum from x1d file
+                        data = fits.getdata(x1d)
+                        src.add_spectrum([data['WAVELENGTH'] * q.um, data['FLUX'] * funit, data['ERROR'] * funit])
 
-                # Fit model grid
-                src.fit_modelgrid(bt)
+                        # # Save the params for verification
+                        # src.Teff_model = header['TEFF']
+                        # src.logg_model = header['LOGG']
+                        # src.FeH_model = header['FEH']
 
-                # Add the source to the catalog
-                self.add_SED(src)
+                    # # Fit a blackbody
+                    # # src.fit_blackbody()
+                    #
+                    # # Fit spectral type
+                    # src.fit_spectral_type()
 
-        print("{}/{} sources added to catalog{}"\
-              .format(len(self.results), len(self.source_list),
-              " after applying '{}' color cuts".format(color_cut)
-              if color_cut is not None else ''))
+                    # Fit model grid
+                    src.fit_modelgrid(bt)
+
+                    # Add the source to the catalog
+                    self.add_SED(src)
+
+        print("{}/{} sources added to catalog {}".format(len(self.results), len(self.source_list), " after applying '{}' color cuts".format(color_cut) if color_cut is not None else ''))
