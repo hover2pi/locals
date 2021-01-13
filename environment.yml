@@ -17,7 +17,7 @@ dependencies:
   - pip:
     - astroquery==0.4.1
     - numpydoc==0.8.0
-    - sedkit==1.0.6
+    - sedkit==1.0.8
     - svo-filters==0.3.0
     - werkzeug==0.16.1
     - configobj==5.0.6

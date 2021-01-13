@@ -24,7 +24,7 @@ Simbad.TIMEOUT = 300
 Simbad.add_votable_fields('otype', 'sptype', 'id', 'ubv', 'fluxdata(V)', 'fluxdata(J)')
 
 
-def generate_data(catalog_obj, outdir, photometry=['NIRCam.F115W', 'NIRCam.F150W', 'NIRCam.F277W', 'NIRCam.F356W', 'NIRCam.F444W']):
+def generate_data(catalog_obj, outdir, photometry=['NIRCam.F115W', 'NIRCam.F150W', 'NIRCam.F277W', 'NIRCam.F356W', 'NIRCam.F444W'], bandpass='NIRCam.F356W'):
     """
     Generate a fake JWST pipeline catalog replete with photometry and spectra
     using a range of model atmospheres
@@ -58,7 +58,7 @@ def generate_data(catalog_obj, outdir, photometry=['NIRCam.F115W', 'NIRCam.F150W
     header = fits.getheader(resource_filename('locals', 'data/template_x1d.fits'))
 
     # Make x1d file for spectra
-    x1d_file = os.path.join(outdir, '{}_x1d.fits'.format(band))
+    x1d_file = os.path.join(outdir, '{}_x1d.fits'.format(bandpass))
     x1d_hdu = fits.HDUList(fits.PrimaryHDU(header=header))
 
     # Put spectra in x1d fits file
@@ -193,7 +193,7 @@ def field_simulation(ra='14 20 26.6772', dec='+52 57 19.02', bandpass='NIRCam.F3
         return results, cat
 
     else:
-        generate_data(cat, outdir, photometry=photometry)
+        generate_data(cat, outdir, photometry=photometry, bandpass=bandpass)
 
 
 # def field_simulation_Simbad(target, bandpass, radius=None):

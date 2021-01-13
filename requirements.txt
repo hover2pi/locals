@@ -15,7 +15,7 @@ bokeh==2.2.3
 svo_filters==0.3.0
 scipy==1.2.1
 astroquery==0.4.1
-sedkit==1.0.6
+sedkit==1.0.8
 
 asdf==2.7.1
 crds==10.1.0
