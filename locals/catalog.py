@@ -10,6 +10,7 @@ Low-mass Object Characterization by AnaLyzing Slitless Spectroscopy (LOCALS) is 
 """
 import os
 import glob
+import time
 
 import astropy.units as q
 import astropy.table as at
@@ -105,5 +106,8 @@ class SourceCatalog(Catalog):
 
                     # Add the source to the catalog
                     self.add_SED(src)
+
+                    # Pause to prevent timeout
+                    time.sleep(4)
 
         print("{}/{} sources added to catalog {}".format(len(self.results), len(self.source_list), " after applying '{}' color cuts".format(color_cut) if color_cut is not None else ''))

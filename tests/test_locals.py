@@ -14,4 +14,4 @@ class TestSourceCatalog(unittest.TestCase):
         """Test if a SourceCatalog object is created properly"""
         cat = SourceCatalog(self.cat_path, color_cut='brown_dwarfs')
 
-        self.assertEqual(len(cat.results), 5)
+        self.assertEqual(len(cat.results), 11)
