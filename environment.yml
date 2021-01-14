@@ -4,7 +4,7 @@ channels:
   - http://ssb.stsci.edu/astroconda
   - defaults
 dependencies:
-  - numpy>=1.18.1
+  - numpy>=1.19.4
   - astropy=4.1
   - python>=3.6.8
   - bokeh=2.2.3
