@@ -21,8 +21,6 @@ MANIFEST
 docs/api
 docs/_build
 
-locals/data/fake/*
-
 # Eclipse editor project files
 .project
 .pydevproject
