@@ -5,7 +5,7 @@ channels:
   - defaults
 dependencies:
   - numpy=1.19.4
-  - astropy=4.2
+  - astropy>=4.2
   - python>=3.6.8
   - bokeh=2.2.3
   - astroquery>=0.4.2
